@@ -34,9 +34,10 @@ async def post_cmd(message: types.Message):
         [InlineKeyboardButton(text="✅ ПРОГНОЗЫ", url="https://site2-production-29a1.up.railway.app")]
     ])
     await message.answer(parse_mode="HTML", caption=msg, reply_markup=keyboard)
-
+    
 async def main():
     print("✅ Бот запущен! v1.2")
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
