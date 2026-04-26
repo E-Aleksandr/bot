@@ -35,13 +35,19 @@ async def format_top_message():
     if not top_players:
         return "Пока нет данных об игроках."
     
-    message = "Результаты:\n\n"
+    message = "‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n<i><<<ЧЕЛЛЕНДЖ НА КИЛЛЫ>>></i>\n\n<blockquote>🏆 <b>Задроты:</b>\n"
     
     for idx, player in enumerate(top_players, 1):
         medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"\n{idx}." if idx == 4 else f"{idx}."
-        message += f"{medal} {player['name']} - {player['destroyed_count']}/88\n"
+        if idx <= 3:
+            message += f"{medal} {player['name']}\n"
+            message += f"       {player['destroyed_count']}/88\n"
+            if idx == 3: message += "</blockquote>\n"
+        else:
+            message += f"{medal} {player['name']}\n"
+            message += f"    {player['destroyed_count']}/88\n"
     
-    message += f"\n\nНа момент {now.strftime("%d.%m.%Y %H:%M")} по МСК"
+    message += f"\n\n<i>На момент {now.strftime("%d.%m.%Y %H:%M")} по МСК</i>"
     return message
 
 @dp.callback_query(lambda c: c.data == "refresh_top")
@@ -56,11 +62,7 @@ async def refresh_top_callback(callback: types.CallbackQuery):
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
     
-    await callback.message.edit_text(
-        top_text,
-        parse_mode="Markdown",
-        reply_markup=keyboard
-    )
+    await callback.message.edit_text(top_text, parse_mode="HTML", reply_markup=keyboard)
     
     await callback.answer("✅ Топ обновлён")
 
@@ -75,7 +77,7 @@ async def post_cmd(message: types.Message):
 
     top_text = await format_top_message()
 
-    await message.answer(top_text, parse_mode="Markdown", reply_markup=keyboard)
+    await message.answer(top_text, parse_mode="HTML", reply_markup=keyboard)
     
 async def main():
     print("✅ Бот запущен! v1.2")
