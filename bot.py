@@ -2,38 +2,32 @@
 import os
 import asyncio
 import datetime
+import aiohttp
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
-import libsql_experimental as libsql
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 ADMIN_IDS = [1723402881, 5659860044]
+API_BASE_URL = "https://progress-g6mm.onrender.com"
 
 bot = Bot(token=BOT_TOKEN)
-TURSO_DB_URL = os.environ.get("TURSO_DB_URL")
-TURSO_DB_TOKEN = os.environ.get("TURSO_DB_TOKEN")
-
-db = libsql.connect(database=TURSO_DB_URL, auth_token=TURSO_DB_TOKEN)
 dp = Dispatcher()
 
 async def get_top_players(limit=10):
-    query = """
-        SELECT 
-            p.name,
-            COUNT(CASE WHEN tp.destroyed = 1 THEN 1 END) as destroyed_count,
-            COUNT(tp.id) as total_tanks,
-            ROUND(CAST(COUNT(CASE WHEN tp.destroyed = 1 THEN 1 END) AS FLOAT) / COUNT(tp.id) * 100, 1) as percent
-        FROM players p
-        JOIN tank_progress tp ON p.id = tp.player_id
-        GROUP BY p.id
-        ORDER BY destroyed_count DESC, percent DESC
-        LIMIT ?
-    """
-    
-    result = await db.execute(query, [limit])
-    return result.rows
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(f"{API_BASE_URL}/api/top") as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return data.get("top", [])
+                else:
+                    print(f"Ошибка API: {resp.status}")
+                    return []
+        except Exception as e:
+            print(f"Ошибка запроса: {e}")
+            return []
 
 async def format_top_message(limit=10):
     top_players = await get_top_players(limit)
