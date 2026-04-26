@@ -1,6 +1,7 @@
 # bot.py
 import os
 import asyncio
+import datetime
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.filters import Command
@@ -12,11 +13,54 @@ ADMIN_IDS = [1723402881]
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-msg = """
-топ
-...
-...
-"""
+async def get_top_players(limit=10):
+    query = """
+        SELECT 
+            p.name,
+            COUNT(CASE WHEN tp.destroyed = 1 THEN 1 END) as destroyed_count,
+            COUNT(tp.id) as total_tanks,
+            ROUND(CAST(COUNT(CASE WHEN tp.destroyed = 1 THEN 1 END) AS FLOAT) / COUNT(tp.id) * 100, 1) as percent
+        FROM players p
+        JOIN tank_progress tp ON p.id = tp.player_id
+        GROUP BY p.id
+        ORDER BY destroyed_count DESC, percent DESC
+        LIMIT ?
+    """
+    
+    result = await db.execute(query, [limit])
+    return result.rows
+
+async def format_top_message(limit=10):
+    top_players = await get_top_players(limit)
+    
+    if not top_players:
+        return "Пока нет данных об игроках."
+    
+    message = "**Результаты:**\n\n"
+    
+    for idx, player in enumerate(top_players, 1):
+        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"\n{idx}."
+        message += f"{medal} **{player['name']}**\n"
+        message += f" - {player['destroyed_count']}/{player['total_tanks']}\n"
+    
+    message += f"__На момент {datetime.date} {datetime.time} по МСК__"
+    return message
+
+@dp.callback_query(lambda c: c.data == "refresh_top")
+async def refresh_top_callback(callback: types.CallbackQuery):
+    top_text = await format_top_message(limit=10)
+    
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
+    ])
+    
+    await callback.message.edit_text(
+        top_text,
+        parse_mode="Markdown",
+        reply_markup=keyboard
+    )
+    
+    await callback.answer()
 
 @dp.message(Command("post"))
 async def post_cmd(message: types.Message):
@@ -25,12 +69,12 @@ async def post_cmd(message: types.Message):
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📝 ИНФА И ПРАВИЛА", url="https://t.me/c/1657644603/411360/603092")],
-        [InlineKeyboardButton(text="🎬 ЖЕРЕБЬЁВКА", url="https://t.me/c/1657644603/411360/610175"),
-         InlineKeyboardButton(text="⚙️ ТУР СЕТКА", url="https://t.me/c/1657644603/411360/615492")],
-        [InlineKeyboardButton(text="✅ ПРОГНОЗЫ", url="https://site2-production-29a1.up.railway.app")]
+        [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
-    await message.answer(msg, parse_mode="HTML", reply_markup=keyboard)
+
+    top_text = await format_top_message(limit=10)
+
+    await message.answer(top_text, parse_mode="Markdown", reply_markup=keyboard)
     
 async def main():
     print("✅ Бот запущен! v1.2")
