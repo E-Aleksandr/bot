@@ -10,15 +10,15 @@ from aiogram.types import FSInputFile
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 ADMIN_IDS = [1723402881, 5659860044]
-API_BASE_URL = "https://progress-g6mm.onrender.com"
+API_BASE_URL = "https://progress-g6mm.onrender.com/g83dsh21tdsg9sa/topGet"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-async def get_top_players(limit=10):
+async def get_top_players():
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.get(f"{API_BASE_URL}/g83dsh21tdsg9sa/topGet") as resp:
+            async with session.get(API_BASE_URL) as resp:
                 if resp.status == 200:
                     data = await resp.json()
                     return data.get("top", [])
@@ -29,8 +29,8 @@ async def get_top_players(limit=10):
             print(f"Ошибка запроса: {e}")
             return []
 
-async def format_top_message(limit=10):
-    top_players = await get_top_players(limit)
+async def format_top_message():
+    top_players = await get_top_players()
     
     if not top_players:
         return "Пока нет данных об игроках."
@@ -68,7 +68,7 @@ async def refresh_top_callback(callback: types.CallbackQuery):
 @dp.message(Command("post"))
 async def post_cmd(message: types.Message):
     if message.from_user.id not in ADMIN_IDS:
-        await callback.answer("❌ У вас нет прав постить запись", show_alert=True)
+        await message.reply("Иди нахуй")
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
