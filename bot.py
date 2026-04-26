@@ -31,12 +31,12 @@ async def get_top_players():
 
 async def format_top_message():
     top_players = await get_top_players()
-    now = datetime.datetime.now()
+    now = datetime.datetime.now() + datetime.timedelta(hours=3)
     
     if not top_players:
         return "Пока нет данных об игроках."
     
-    message = "Таблица лидеров в челлендже\n‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n\n<blockquote>🏆 <b>Задроты:</b>\n\n"
+    message = "Таблица лидеров челленджа\n‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n\n<blockquote>🏆 <b>Задроты:</b>\n\n"
     
     for idx, player in enumerate(top_players, 1):
         if idx == 1:
