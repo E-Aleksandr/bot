@@ -35,13 +35,13 @@ async def format_top_message():
     if not top_players:
         return "Пока нет данных об игроках."
     
-    message = "**Результаты:**\n\n"
+    message = "Результаты:\n\n"
     
     for idx, player in enumerate(top_players, 1):
-        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"{idx}."
-        message += f"{medal}**{player['name']}**\n  {player['destroyed_count']}/88\n"
+        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"\n{idx}." if idx == 4 else f"{idx}."
+        message += f"{medal} {player['name']} - {player['destroyed_count']}/88\n"
     
-    message += f"\n\n__На момент {now.strftime("%d.%m.%Y %H:%M:%S")} по МСК__"
+    message += f"\n\nНа момент {now.strftime("%d.%m.%Y %H:%M")} по МСК"
     return message
 
 @dp.callback_query(lambda c: c.data == "refresh_top")
@@ -50,7 +50,7 @@ async def refresh_top_callback(callback: types.CallbackQuery):
         await callback.answer("❌ У вас нет прав обновлять топ", show_alert=True)
         return
     
-    top_text = await format_top_message(limit=10)
+    top_text = await format_top_message()
     
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
@@ -67,7 +67,6 @@ async def refresh_top_callback(callback: types.CallbackQuery):
 @dp.message(Command("post"))
 async def post_cmd(message: types.Message):
     if message.from_user.id not in ADMIN_IDS:
-        await message.reply("Иди нахуй")
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
