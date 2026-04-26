@@ -18,7 +18,7 @@ dp = Dispatcher()
 async def get_top_players(limit=10):
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.get(f"{API_BASE_URL}/api/top") as resp:
+            async with session.get(f"{API_BASE_URL}/g83dsh21tdsg9sa/topGet") as resp:
                 if resp.status == 200:
                     data = await resp.json()
                     return data.get("top", [])
@@ -38,8 +38,8 @@ async def format_top_message(limit=10):
     message = "**Результаты:**\n\n"
     
     for idx, player in enumerate(top_players, 1):
-        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"\n{idx}."
-        message += f"{medal} **{player['name']}**\n"
+        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else "\n4. " if idx == 4 else f"{idx}."
+        message += f"{medal}. **{player['name']}**\n"
         message += f" - {player['destroyed_count']}/{player['total_tanks']}\n"
     
     message += f"__На момент {datetime.date} {datetime.time} по МСК__"
