@@ -2,4 +2,4 @@ fastapi
 uvicorn
 aiogram>=3.0.0
 asyncpg
-libsql-client==0.6.0
+libsql-experimental
