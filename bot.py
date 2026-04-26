@@ -31,7 +31,7 @@ async def get_top_players():
 
 async def format_top_message():
     top_players = await get_top_players()
-    
+    now = datetime.datetime.now()
     if not top_players:
         return "Пока нет данных об игроках."
     
@@ -39,9 +39,9 @@ async def format_top_message():
     
     for idx, player in enumerate(top_players, 1):
         medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"{idx}."
-        message += f"{medal}**{player['name']}** - {player['destroyed_count']}/88\n"
+        message += f"{medal}**{player['name']}**\n  {player['destroyed_count']}/88\n"
     
-    message += f"\n\n__На момент {datetime.strftime("%d.%m.%Y %H:%M:%S")} по МСК__"
+    message += f"\n\n__На момент {now.strftime("%d.%m.%Y %H:%M:%S")} по МСК__"
     return message
 
 @dp.callback_query(lambda c: c.data == "refresh_top")
