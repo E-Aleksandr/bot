@@ -38,11 +38,10 @@ async def format_top_message():
     message = "**Результаты:**\n\n"
     
     for idx, player in enumerate(top_players, 1):
-        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else "\n4. " if idx == 4 else f"{idx}."
-        message += f"{medal}. **{player['name']}**\n"
-        message += f" - {player['destroyed_count']}/{player['total_tanks']}\n"
+        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"{idx}."
+        message += f"{medal}**{player['name']}** - {player['destroyed_count']}/88\n"
     
-    message += f"__На момент {datetime.date} {datetime.time} по МСК__"
+    message += f"\n\n__На момент {datetime.strftime("%d.%m.%Y %H:%M:%S")} по МСК__"
     return message
 
 @dp.callback_query(lambda c: c.data == "refresh_top")
