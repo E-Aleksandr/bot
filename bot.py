@@ -6,11 +6,16 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
+from libsql_client import create_client
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-ADMIN_IDS = [1723402881]
+ADMIN_IDS = [1723402881, 5659860044]
 
 bot = Bot(token=BOT_TOKEN)
+TURSO_DB_URL = os.environ.get("TURSO_DB_URL")
+TURSO_DB_TOKEN = os.environ.get("TURSO_DB_TOKEN")
+
+db = create_client(url=TURSO_DB_URL, auth_token=TURSO_DB_TOKEN)
 dp = Dispatcher()
 
 async def get_top_players(limit=10):
