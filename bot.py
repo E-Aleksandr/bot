@@ -36,7 +36,7 @@ async def format_top_message():
     if not top_players:
         return "Пока нет данных об игроках."
     
-    message = "Таблица лидеров в челлендже\n‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n\n<blockquote>🏆 <b>Задроты:</b>\n"
+    message = "Таблица лидеров в челлендже\n‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n\n<blockquote>🏆 <b>Задроты:</b>\n\n"
     
     for idx, player in enumerate(top_players, 1):
         if idx == 1:
@@ -70,7 +70,8 @@ async def refresh_top_callback(callback: types.CallbackQuery):
     
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✅ Прогресс", url="https://t.me/c/1657644603/630188/630190")],
-        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190")],
+        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190"),
+         InlineKeyboardButton(text="💰 Донат", url="https://t.me/B_HATYPE_KOH4EHblU")],
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
     
@@ -85,7 +86,8 @@ async def post_cmd(message: types.Message):
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✅ Прогресс", url="https://t.me/c/1657644603/630188/630190")],
-        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190")],
+        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190"),
+         InlineKeyboardButton(text="💰 Донат", url="https://t.me/B_HATYPE_KOH4EHblU")],
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
 
