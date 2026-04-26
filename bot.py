@@ -74,7 +74,7 @@ async def post_cmd(message: types.Message):
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
 
-    top_text = await format_top_message(limit=10)
+    top_text = await format_top_message()
 
     await message.answer(top_text, parse_mode="Markdown", reply_markup=keyboard)
     
