@@ -68,7 +68,7 @@ async def refresh_top_callback(callback: types.CallbackQuery):
 @dp.message(Command("post"))
 async def post_cmd(message: types.Message):
     if message.from_user.id not in ADMIN_IDS:
-        await message.reply("Иди нахуй")
+        await callback.answer("❌ У вас нет прав постить запись", show_alert=True)
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
