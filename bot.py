@@ -32,22 +32,32 @@ async def get_top_players():
 async def format_top_message():
     top_players = await get_top_players()
     now = datetime.datetime.now()
+    
     if not top_players:
         return "Пока нет данных об игроках."
     
     message = "‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n<i><<<ЧЕЛЛЕНДЖ НА КИЛЛЫ>>></i>\n\n<blockquote>🏆 <b>Задроты:</b>\n"
     
     for idx, player in enumerate(top_players, 1):
-        medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else f"\n{idx}." if idx == 4 else f"{idx}."
-        if idx <= 3:
-            message += f"{medal} {player['name']}\n"
-            message += f"       {player['destroyed_count']}/88\n"
-            if idx == 3: message += "</blockquote>\n"
+        if idx == 1:
+            medal = "🥇"
+        elif idx == 2:
+            medal = "🥈"
+        elif idx == 3:
+            medal = "🥉"
         else:
-            message += f"{medal} {player['name']}\n"
-            message += f"    {player['destroyed_count']}/88\n"
+            medal = f"{idx}."
+        
+        message += f"{medal} {player['name']}\n"
+        message += f"       {player['destroyed_count']}/88\n"
+        
+        if idx == 3:
+            message += "</blockquote>\n"
     
-    message += f"\n\n<i>На момент {now.strftime("%d.%m.%Y %H:%M")} по МСК</i>"
+    if len(top_players) < 3:
+        message += "</blockquote>\n"
+    
+    message += f"\n\n<i>На момент {now.strftime('%d.%m.%Y %H:%M')} по МСК</i>"
     return message
 
 @dp.callback_query(lambda c: c.data == "refresh_top")
