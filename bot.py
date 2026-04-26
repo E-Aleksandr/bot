@@ -36,7 +36,7 @@ async def format_top_message():
     if not top_players:
         return "Пока нет данных об игроках."
     
-    message = "‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n<i><<<ЧЕЛЛЕНДЖ НА КИЛЛЫ>>></i>\n\n<blockquote>🏆 <b>Задроты:</b>\n"
+    message = "Таблица лидеров в челлендже\n‼️<b>КОЛЛЕКЦИОНЕР</b>‼️\n\n<blockquote>🏆 <b>Задроты:</b>\n"
     
     for idx, player in enumerate(top_players, 1):
         if idx == 1:
@@ -63,7 +63,7 @@ async def format_top_message():
 @dp.callback_query(lambda c: c.data == "refresh_top")
 async def refresh_top_callback(callback: types.CallbackQuery):
     if callback.from_user.id not in ADMIN_IDS:
-        await callback.answer("❌ У вас нет прав обновлять топ", show_alert=True)
+        await callback.answer("❌ Обновлять результаты может только организатор", show_alert=True)
         return
     
     top_text = await format_top_message()
@@ -82,6 +82,8 @@ async def post_cmd(message: types.Message):
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Прогресс", url="https://t.me/c/1657644603/630188/630190")],
+        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190")],
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
 
