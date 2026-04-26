@@ -33,7 +33,7 @@ async def post_cmd(message: types.Message):
          InlineKeyboardButton(text="⚙️ ТУР СЕТКА", url="https://t.me/c/1657644603/411360/615492")],
         [InlineKeyboardButton(text="✅ ПРОГНОЗЫ", url="https://site2-production-29a1.up.railway.app")]
     ])
-    await message.answer_photo(photo=FSInputFile("setka.jpg"), parse_mode="HTML", caption=msg, reply_markup=keyboard)
+    await message.answer(parse_mode="HTML", caption=msg, reply_markup=keyboard)
 
 async def main():
     print("✅ Бот запущен! v1.2")
