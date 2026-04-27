@@ -85,8 +85,8 @@ async def post_cmd(message: types.Message):
         return
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Прогресс", url="https://t.me/c/1657644603/630188/630190")],
-        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190"),
+        [InlineKeyboardButton(text="✅ Прогресс", url="https://progress-g6mm.onrender.com/view")],
+        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/411360/630220"),
          InlineKeyboardButton(text="💰 Донат", url="https://t.me/B_HATYPE_KOH4EHblU")],
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
@@ -94,6 +94,22 @@ async def post_cmd(message: types.Message):
     top_text = await format_top_message()
 
     await message.answer(top_text, parse_mode="HTML", reply_markup=keyboard)
+
+from fastapi import FastAPI
+import uvicorn
+import threading
+
+web_app = FastAPI()
+
+@web_app.get("/")
+async def root():
+    return {"status": "bot is running"}
+
+def run_web():
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(web_app, host="0.0.0.0", port=port)
+
+threading.Thread(target=run_web, daemon=True).start()
     
 async def main():
     print("✅ Бот запущен! v1.2")
