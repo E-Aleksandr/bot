@@ -69,8 +69,8 @@ async def refresh_top_callback(callback: types.CallbackQuery):
     top_text = await format_top_message()
     
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Прогресс", url="https://t.me/c/1657644603/630188/630190")],
-        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/630188/630190"),
+        [InlineKeyboardButton(text="✅ Прогресс", url="https://progress-g6mm.onrender.com/view")],
+        [InlineKeyboardButton(text="ℹ️ Правила", url="https://t.me/c/1657644603/411360/630220"),
          InlineKeyboardButton(text="💰 Донат", url="https://t.me/B_HATYPE_KOH4EHblU")],
         [InlineKeyboardButton(text="🔄 Обновить топ", callback_data="refresh_top")]
     ])
